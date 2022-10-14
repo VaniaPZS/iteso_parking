@@ -9,6 +9,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.from(
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: Color.fromARGB(6, 39, 84, 255))),
       title: 'Material App',
       home: HomePage(),
     );
