@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iteso_parking/profile/Car.dart';
+import 'package:iteso_parking/profile/car.dart';
 
 class CarButton extends StatelessWidget {
   final Car car;

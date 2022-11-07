@@ -18,3 +18,10 @@ Car myCar = Car(
   capacity: 5,
   plates: 'abc12345',
 );
+
+Car myCar2 = Car(
+  manufacturer: 'Honda',
+  model: 'Accord',
+  capacity: 5,
+  plates: 'jak12345',
+);

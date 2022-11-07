@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:iteso_parking/place_finder/bloc/place_bloc.dart';
+import 'package:iteso_parking/place_finder/place.dart';
 import 'package:iteso_parking/place_finder/place_finder_page.dart';
 import 'package:iteso_parking/problem/problem_page.dart';
 import 'package:iteso_parking/profile/profile_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -53,6 +56,7 @@ class HomePage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    BlocProvider.of<PlaceBloc>(context).add(FindPlaceEvent());
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => PlaceFinderPage(),
