@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-void main() => runApp(const ProblemPage());
-
 class ProblemPage extends StatelessWidget {
   const ProblemPage({super.key});
 
