@@ -21,3 +21,15 @@ class FindPlaceErrorState extends PlaceState {
 }
 
 class FindPlaceLoadingState extends PlaceState {}
+
+class LeavePlaceSuccessState extends PlaceState {}
+
+class LeavePlaceErrorState extends PlaceState {
+  final String error;
+
+  LeavePlaceErrorState({required this.error});
+}
+
+class LeavePlaceLoadingState extends PlaceState {}
+
+class LeavePlaceNotParkedState extends PlaceState {}

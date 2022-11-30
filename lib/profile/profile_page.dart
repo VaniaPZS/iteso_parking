@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iteso_parking/auth/bloc/auth_bloc.dart';
+import 'package:iteso_parking/login_page.dart';
 import 'package:iteso_parking/profile/bloc/profile_bloc.dart';
 import 'package:iteso_parking/profile/car.dart';
 import 'package:iteso_parking/profile/car_button.dart';
@@ -14,7 +16,25 @@ class ProfilePage extends StatelessWidget {
     BlocProvider.of<ProfileBloc>(context).add(GetProfileEvent());
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mi perfil'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Mi perfil'),
+            IconButton(
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context).add(SignOutEvent());
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.logout,
+              ),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -123,7 +143,7 @@ class ProfileInfo extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Nombre: Juan Perez',
+                  'Nombre: ${userProfile.name}',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.grey[100],
@@ -138,7 +158,7 @@ class ProfileInfo extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Expediente: IS234567',
+                  'Expediente: ${userProfile.userNumber}',
                   style: TextStyle(
                     color: Colors.grey[100],
                     fontSize: 20,

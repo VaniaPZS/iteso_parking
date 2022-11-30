@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iteso_parking/place_finder/place.dart';
 import 'package:iteso_parking/problem/problem_page.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../problem/problem_button.dart';
 import '../profile/profile_page.dart';
@@ -71,7 +72,7 @@ class PlaceFinderPage extends StatelessWidget {
         SizedBox(
           height: 40,
         ),
-        PlaceMap(asignedPlace),
+        PlaceMap(context, asignedPlace),
         Expanded(
           child: SizedBox(),
         ),
@@ -125,7 +126,7 @@ class PlaceFinderPage extends StatelessWidget {
     );
   }
 
-  Widget PlaceMap(Place asignedPlace) {
+  Widget PlaceMap(BuildContext context, Place asignedPlace) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
@@ -149,10 +150,33 @@ class PlaceFinderPage extends StatelessWidget {
               ),
             ),
           ),
-          Image.network(
-              'https://d500.epimg.net/cincodias/imagenes/2015/10/29/lifestyle/1446136907_063470_1446137018_noticia_normal.jpg'),
+          GestureDetector(
+            onTap: () {
+              _launchInBrowser(context, asignedPlace.mapsUrl);
+            },
+            child: Image.network(
+              '${asignedPlace.imageUrl}',
+              fit: BoxFit.fill,
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchInBrowser(context, url) async {
+    print(url);
+    if (url == '') {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text('No se encontró el sitio')),
+        );
+    } else if (!await launchUrl(
+      Uri.parse(url),
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
   }
 }

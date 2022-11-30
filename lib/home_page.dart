@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iteso_parking/login_page.dart';
 import 'package:iteso_parking/place_finder/bloc/place_bloc.dart';
 import 'package:iteso_parking/place_finder/place.dart';
 import 'package:iteso_parking/place_finder/place_finder_page.dart';
@@ -7,6 +8,7 @@ import 'package:iteso_parking/profile/profile_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iteso_parking/auth/bloc/auth_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -17,6 +19,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -84,19 +87,80 @@ class HomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Lottie.network(
-                              'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
-                              width: 50,
-                            ),
-                            Text('Marcar Salida'),
-                            Lottie.network(
-                              'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
-                              width: 50,
-                            ),
-                          ],
+                        onPressed: () {
+                          BlocProvider.of<PlaceBloc>(context)
+                              .add(LeavePlaceEvent());
+                        },
+                        child: BlocConsumer<PlaceBloc, PlaceState>(
+                          listener: (context, state) {
+                            if (state is LeavePlaceErrorState) {
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Error al marcar salida del lugar, intentelo mas tarde...'),
+                                  ),
+                                );
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is LeavePlaceLoadingState) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else if (state is LeavePlaceNotParkedState) {
+                              return Row(
+                                children: [
+                                  Lottie.network(
+                                    'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
+                                    width: 50,
+                                  ),
+                                  Text('No te encuentras estacionado!'),
+                                  Lottie.network(
+                                    'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
+                                    width: 50,
+                                  ),
+                                ],
+                              );
+                            } else if (state is LeavePlaceSuccessState) {
+                              return Row(
+                                children: [
+                                  Lottie.network(
+                                    'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
+                                    width: 50,
+                                  ),
+                                  Text('Gracias por marcar tu salida!'),
+                                  Lottie.network(
+                                    'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
+                                    width: 50,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Row(
+                                children: [
+                                  Lottie.network(
+                                    'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
+                                    width: 50,
+                                  ),
+                                  Text('Marcar Salida'),
+                                  Lottie.network(
+                                    'https://assets8.lottiefiles.com/packages/lf20_zmKJtL.json',
+                                    width: 50,
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
                         style: ElevatedButton.styleFrom(
                           shape: StadiumBorder(),

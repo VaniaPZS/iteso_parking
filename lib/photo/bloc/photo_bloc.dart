@@ -73,6 +73,8 @@ class PhotoBloc extends Bloc<PhotoEvent, PhotoState> {
       OnNewFormWithPhotoEvent event, Emitter emit) async {
     _selectedPhoto = null;
     imageUrl = "";
+
+    emit(InitPhotoState());
   }
 /*Future<bool> _uploadData(Map<String, dynamic> dataToSave) async {
     try {

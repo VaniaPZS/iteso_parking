@@ -11,3 +11,14 @@ class GetProfileEvent extends ProfileEvent {
   @override
   List<Object> get props => [];
 }
+
+class RegisterNewCarEvent extends ProfileEvent {
+  Car newCar;
+
+  RegisterNewCarEvent({
+    required this.newCar,
+  });
+
+  @override
+  List<Object> get props => [];
+}

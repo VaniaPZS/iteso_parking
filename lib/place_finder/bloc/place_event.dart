@@ -11,3 +11,5 @@ class FindPlaceEvent extends PlaceEvent {
   @override
   List<Object> get props => [];
 }
+
+class LeavePlaceEvent extends PlaceEvent {}

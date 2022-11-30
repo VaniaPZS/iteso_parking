@@ -21,3 +21,16 @@ class GetProfileErrorState extends ProfileState {
 }
 
 class GetProfileLoadingState extends ProfileState {}
+
+class RegisterNewCarSuccessState extends ProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class RegisterNewCarErrorState extends ProfileState {
+  final String error;
+
+  RegisterNewCarErrorState({required this.error});
+}
+
+class RegisterNewCarLoadingState extends ProfileState {}
