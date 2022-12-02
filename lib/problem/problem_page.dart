@@ -5,6 +5,7 @@ import 'package:iteso_parking/home_page.dart';
 import 'package:iteso_parking/photo/bloc/photo_bloc.dart';
 import 'package:iteso_parking/problem/bloc/problem_bloc.dart';
 import 'package:iteso_parking/problem/problem.dart';
+import 'package:iteso_parking/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 
 class ProblemPage extends StatefulWidget {
@@ -46,9 +47,9 @@ class _ProblemPageState extends State<ProblemPage> {
           },
           builder: (context, state) {
             if (state is RegisterProblemLoadingState) {
-              return Text('loading');
+              return LoadingWidget();
             } else if (state is RegisterProblemSuccessState) {
-              return Text('Done!');
+              return DoneWidget();
             } else {
               return Column(
                 children: [

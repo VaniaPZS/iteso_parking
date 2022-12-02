@@ -5,6 +5,7 @@ import 'package:iteso_parking/place_finder/place.dart';
 import 'package:iteso_parking/place_finder/place_finder_page.dart';
 import 'package:iteso_parking/problem/problem_page.dart';
 import 'package:iteso_parking/profile/profile_page.dart';
+import 'package:iteso_parking/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -176,7 +177,9 @@ class HomePage extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          _showMyDialogDisponibilidad(context, 55.0);
+                          BlocProvider.of<PlaceBloc>(context)
+                              .add(GetAvailabilityPlaceEvent());
+                          _showMyDialogDisponibilidad(context);
                         },
                         child: Row(
                           children: [
@@ -236,49 +239,76 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Future<void> _showMyDialogDisponibilidad(context, percentage) async {
+Future<void> _showMyDialogDisponibilidad(context) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Disponibilidad de lugares.'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(
-                  'En este momento el estacionamiento del ITESO se encuentra a un ${percentage}% de su capacidad total. '),
-              SizedBox(
-                height: 40,
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 30, right: 30),
-                alignment: Alignment.center,
-                child: LinearPercentIndicator(
-                  //leaner progress bar
-                  animation: true,
-                  animationDuration: 1000,
-                  lineHeight: 30.0,
-                  percent: percentage / 100,
-                  center: Text(
-                    percentage.toString() + "%",
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black),
+        content: BlocConsumer<PlaceBloc, PlaceState>(
+          listener: (context, state) {
+            if (state is GetAvailabilityErrorState) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        'Error al cargar el porcentage, intentelo mas tarde...'),
                   ),
-                  // linearStrokeCap: LinearStrokeCap.roundAll,
+                );
+            }
+          },
+          builder: (context, state) {
+            if (state is GetAvailabilityLoadingState) {
+              return SmallLoadingWidget();
+            } else if (state is GetAvailabilitySuccessState) {
+              double? percentage =
+                  context.watch<PlaceBloc>().availabilityPercentage;
+              percentage = percentage?.roundToDouble();
 
-                  progressColor: percentage < 80
-                      ? Colors.green
-                      : percentage < 100
-                          ? Colors.yellow
-                          : Colors.red,
-                  backgroundColor: Colors.grey[300],
+              return SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text(
+                        'En este momento el estacionamiento del ITESO se encuentra a un ${percentage}% de su capacidad total. '),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 30, right: 30),
+                      alignment: Alignment.center,
+                      child: LinearPercentIndicator(
+                        //leaner progress bar
+                        animation: true,
+                        animationDuration: 1000,
+                        lineHeight: 30.0,
+                        percent: percentage! / 100,
+                        center: Text(
+                          percentage.toString() + "%",
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black),
+                        ),
+                        // linearStrokeCap: LinearStrokeCap.roundAll,
+
+                        progressColor: percentage < 80
+                            ? Colors.green
+                            : percentage < 100
+                                ? Colors.yellow
+                                : Colors.red,
+                        backgroundColor: Colors.grey[300],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
+              );
+            } else {
+              BlocProvider.of<PlaceBloc>(context).add(LeavePlaceEvent());
+              return SmallLoadingWidget();
+            }
+          },
         ),
         actions: <Widget>[
           TextButton(

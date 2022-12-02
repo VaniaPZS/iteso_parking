@@ -8,6 +8,9 @@ import 'package:iteso_parking/problem/bloc/problem_bloc.dart';
 import 'package:iteso_parking/profile/bloc/profile_bloc.dart';
 import 'package:iteso_parking/auth/bloc/auth_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:iteso_parking/security/bloc/security_bloc.dart';
+
+import 'security/security_home_page.dart';
 
 // void main() => runApp(const MyApp());
 
@@ -31,6 +34,9 @@ void main() async {
           create: (context) => ProblemBloc(),
         ),
         BlocProvider(
+          create: (context) => SecurityBloc(),
+        ),
+        BlocProvider(
           create: (context) => PhotoBloc(),
         ),
       ],
@@ -44,6 +50,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<AuthBloc>(context).add(VerifyAuthEvent());
     return MaterialApp(
       theme: ThemeData.from(
           colorScheme:
@@ -66,6 +73,8 @@ class MyApp extends StatelessWidget {
               state is AuthErrorState ||
               state is SignOutSuccessState) {
             return LoginPage();
+          } else if (state is AuthSuccessSecurityState) {
+            return SecurityHomePage();
           }
           return Center(child: CircularProgressIndicator());
         },

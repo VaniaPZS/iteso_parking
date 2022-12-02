@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iteso_parking/profile/car.dart';
 import 'package:iteso_parking/profile/profile_page.dart';
+import 'package:iteso_parking/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:iteso_parking/profile/bloc/profile_bloc.dart';
 import 'package:iteso_parking/photo/bloc/photo_bloc.dart';
@@ -35,9 +36,9 @@ class CarRegistrationPage extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is RegisterNewCarLoadingState) {
-              return Text('loading');
+              return LoadingWidget();
             } else if (state is RegisterNewCarSuccessState) {
-              return Text('Done!');
+              return DoneWidget();
             } else {
               return carRegisterForm(context);
             }

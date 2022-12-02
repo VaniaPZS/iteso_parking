@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iteso_parking/place_finder/place.dart';
 import 'package:iteso_parking/problem/problem_page.dart';
+import 'package:iteso_parking/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -51,7 +52,7 @@ class PlaceFinderPage extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is FindPlaceLoadingState) {
-              return Text('Loading');
+              return LoadingWidget();
             } else if (state is FindPlaceSuccessState) {
               var asignedPlace = context.watch<PlaceBloc>().asignedPlace;
               return getPlaceFinderData(context, asignedPlace!);

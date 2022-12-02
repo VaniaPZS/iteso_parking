@@ -7,6 +7,7 @@ import 'package:iteso_parking/profile/car.dart';
 import 'package:iteso_parking/profile/car_button.dart';
 import 'package:iteso_parking/profile/car_registration_page.dart';
 import 'package:iteso_parking/profile/profile.dart';
+import 'package:iteso_parking/utils/utils.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -53,7 +54,7 @@ class ProfilePage extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is GetProfileLoadingState) {
-              return Text('loading');
+              return LoadingWidget();
             } else if (state is GetProfileSuccessState) {
               var userProfile = context.watch<ProfileBloc>().userProfile;
               return getUserProfileData(context, userProfile!);

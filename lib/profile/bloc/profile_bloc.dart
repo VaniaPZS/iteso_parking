@@ -51,38 +51,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Future<void> _getProfile(event, emit) async {
-    /*var sectionsFire =
-    //     await FirebaseFirestore.instance.collection("sections").get();
-
-    // for (var doc in sectionsFire.docs) {
-    //   var placeListFire = await FirebaseFirestore.instance
-    //       .collection("sections")
-    //       .doc(doc.id)
-    //       .collection('placesList');
-
-    //   for (var i = 2; i <= 200; i++) {
-    //     Map<String, dynamic> place_map = {
-    //       'isOccupied': false,
-    //       'occupiedBy': "",
-    //       'place': i,
-    //       'plates': ""
-    //     };
-
-    //     await placeListFire.add(place_map);
-    //   }
-    // }
-
-    // for (var sectionId in listOfSections) {
-    //   Map<String, dynamic> section_map = {
-    //     'isOccupied': false,
-    //     'occupiedBy': "",
-    //     'place': 1,
-    //     'plates': ""
-    //   };
-
-    //   sectionsFire.add(section_map);
-    // }
-    */
 
     emit(GetProfileLoadingState());
 

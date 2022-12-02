@@ -33,3 +33,9 @@ class LeavePlaceErrorState extends PlaceState {
 class LeavePlaceLoadingState extends PlaceState {}
 
 class LeavePlaceNotParkedState extends PlaceState {}
+
+class GetAvailabilityLoadingState extends PlaceState {}
+
+class GetAvailabilitySuccessState extends PlaceState {}
+
+class GetAvailabilityErrorState extends PlaceState {}

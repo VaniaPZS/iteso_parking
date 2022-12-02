@@ -7,6 +7,7 @@ import 'package:iteso_parking/login_page.dart';
 import 'package:iteso_parking/problem/problem.dart';
 import 'package:iteso_parking/security/bloc/security_bloc.dart';
 import 'package:iteso_parking/security/security_problem_page.dart';
+import 'package:iteso_parking/utils/utils.dart';
 
 void main() => runApp(const SecurityHomePage());
 
@@ -77,11 +78,11 @@ class SecurityHomePage extends StatelessWidget {
                   },
                 );
               } else if (state is GetProblemsSecurityLoadingState) {
-                return Text('loading...');
+                return LoadingWidget();
               } else {
                 BlocProvider.of<SecurityBloc>(context)
                     .add(GetProblemsSecurityEvent());
-                return Text('loading...');
+                return LoadingWidget();
               }
             },
           )),

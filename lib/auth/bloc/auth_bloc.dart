@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -19,10 +20,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignOutEvent>(_signOut);
   }
 
-  FutureOr<void> _authVerfication(event, emit) {
+  FutureOr<void> _authVerfication(event, emit) async {
     // inicializar datos de la app
     if (_authRepo.isAlreadyAuthenticated()) {
-      emit(AuthSuccessState());
+      var user = await FirebaseFirestore.instance
+          .collection("user")
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+
+      var user_doc = await FirebaseFirestore.instance
+          .collection("user")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      var user_data = await user_doc.data();
+
+      if (user_data!['userType'] == 'Security') {
+        emit(AuthSuccessSecurityState());
+      } else {
+        emit(AuthSuccessState());
+      }
     } else {
       emit(UnAuthState());
     }
@@ -42,7 +58,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthAwaitingState());
     try {
       await _authRepo.signInWithGoogle();
-      emit(AuthSuccessState());
+      var user = await FirebaseFirestore.instance
+          .collection("user")
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+
+      var user_doc = await FirebaseFirestore.instance
+          .collection("user")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      var user_data = await user_doc.data();
+
+      if (user_data!['userType'] == 'Security') {
+        emit(AuthSuccessSecurityState());
+      } else {
+        emit(AuthSuccessState());
+      }
     } catch (e) {
       print("Error al autenticar: $e");
       emit(AuthErrorState());

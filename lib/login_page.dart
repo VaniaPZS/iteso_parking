@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:iteso_parking/home_page.dart';
+import 'package:iteso_parking/main.dart';
 import 'package:iteso_parking/utils/secrets.dart';
 
 void main() => runApp(const LoginPage());
@@ -31,7 +32,7 @@ class LoginPage extends StatelessWidget {
           AuthStateChangeAction<SignedIn>((context, state) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => HomePage(),
+                builder: (context) => MyApp(),
               ),
             );
           }),

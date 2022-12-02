@@ -13,3 +13,5 @@ class FindPlaceEvent extends PlaceEvent {
 }
 
 class LeavePlaceEvent extends PlaceEvent {}
+
+class GetAvailabilityPlaceEvent extends PlaceEvent {}

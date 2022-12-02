@@ -11,9 +11,11 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
   PlaceBloc() : super(PlaceInitial()) {
     on<FindPlaceEvent>(_findPlace);
     on<LeavePlaceEvent>(_leavePlace);
+    on<GetAvailabilityPlaceEvent>(_getAvailability);
   }
 
   Place? asignedPlace;
+  double? availabilityPercentage = 100;
 
   Future<void> _findPlace(event, emit) async {
     emit(FindPlaceLoadingState());
@@ -163,6 +165,7 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
               isEqualTo: FirebaseAuth.instance.currentUser?.uid)
           .get();
 
+      var user_section = sections_collection.docs[0];
       var user_place = placesList_collection.docs[0];
 
       var user_placeDoc = await FirebaseFirestore.instance
@@ -178,6 +181,16 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
       place_map['plates'] = '';
 
       user_placeDoc.update(place_map);
+
+      var user_sectionDoc = await FirebaseFirestore.instance
+          .collection("sections")
+          .doc(sections_collection.docs[0].id);
+
+      Map<String, dynamic> section_map = await user_section.data();
+
+      section_map['occupancy'] -= 1;
+
+      user_sectionDoc.update(section_map);
 
       var user_map = await user.data();
       user_map!['isParked'] = false;
@@ -199,5 +212,38 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
     } catch (e) {
       return 'error';
     }
+  }
+
+  Future<void> _getAvailability(event, emit) async {
+    emit(GetAvailabilityLoadingState());
+
+    var placeFinded = await _availabilityGetter();
+    print(asignedPlace?.section);
+
+    if (placeFinded == true) {
+      emit(GetAvailabilitySuccessState());
+    } else {
+      emit(GetAvailabilityErrorState());
+    }
+  }
+
+  Future<dynamic> _availabilityGetter() async {
+    var sectionsFire =
+        await FirebaseFirestore.instance.collection("sections").get();
+
+    int totalCapacity = 0;
+    int totalOccupancy = 0;
+
+    for (var doc in sectionsFire.docs) {
+      int docCapacity = await doc.data()['capacity'];
+      int docOccupancy = await doc.data()['occupancy'];
+
+      totalCapacity += docCapacity;
+      totalOccupancy += docOccupancy;
+    }
+
+    availabilityPercentage = totalOccupancy * 100 / totalCapacity;
+
+    return true;
   }
 }
