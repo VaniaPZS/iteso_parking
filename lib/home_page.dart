@@ -265,7 +265,12 @@ Future<void> _showMyDialogDisponibilidad(context) async {
             } else if (state is GetAvailabilitySuccessState) {
               double? percentage =
                   context.watch<PlaceBloc>().availabilityPercentage;
-              percentage = percentage?.roundToDouble();
+
+              if (percentage! > 0 && percentage < 1) {
+                percentage = 1;
+              } else {
+                percentage = percentage.roundToDouble();
+              }
 
               return SingleChildScrollView(
                 child: ListBody(
@@ -283,7 +288,7 @@ Future<void> _showMyDialogDisponibilidad(context) async {
                         animation: true,
                         animationDuration: 1000,
                         lineHeight: 30.0,
-                        percent: percentage! / 100,
+                        percent: percentage / 100,
                         center: Text(
                           percentage.toString() + "%",
                           style: TextStyle(

@@ -211,11 +211,7 @@ class _ProblemPageState extends State<ProblemPage> {
                         ),
                       );
                       await Future.delayed(Duration(seconds: 3));
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(),
-                        ),
-                      );
+                      Navigator.of(context).pop();
                       // BlocProvider.of<ProblemBloc>(context).add(GetProblemEvent());
                     },
                     style: ButtonStyle(

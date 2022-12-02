@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -56,7 +58,9 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
         .where('occupancy', isLessThan: 200)
         .get();
 
-    var asignedSection = sectionsFire.docs[0];
+    var randSectionIndex = Random().nextInt(sectionsFire.docs.length - 1);
+
+    var asignedSection = sectionsFire.docs[randSectionIndex];
 
     var sections_collection =
         await FirebaseFirestore.instance.collection("sections");
@@ -112,14 +116,23 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .update(user_map);
 
-    asignedPlace = Place(
-      section: await asignedSection.data()['section'],
-      number: await asignedPlace_fire.data()['place'],
-      longitude: await asignedSection.data()['longitude'],
-      latitude: await asignedSection.data()['latitude'],
-      imageUrl: await asignedSection.data()['imageUrl'],
-      mapsUrl: await asignedSection.data()['mapsUrl'],
-    );
+    user = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+
+    user_data_map = await user.data();
+
+    if (user_data_map!['isParked'] == true) {
+      asignedPlace = Place(
+        section: user_data_map['parkedSection'],
+        number: user_data_map['parkedPlace'],
+        longitude: user_data_map['parkedLongitude'],
+        latitude: user_data_map['parkedLatitude'],
+        imageUrl: user_data_map['parkedImageUrl'],
+        mapsUrl: user_data_map['parkedMapsUrl'],
+      );
+    }
 
     return true;
   }

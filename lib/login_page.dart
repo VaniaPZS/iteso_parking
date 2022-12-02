@@ -4,8 +4,6 @@ import 'package:iteso_parking/home_page.dart';
 import 'package:iteso_parking/main.dart';
 import 'package:iteso_parking/utils/secrets.dart';
 
-void main() => runApp(const LoginPage());
-
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 

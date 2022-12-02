@@ -24,10 +24,9 @@ class ProfilePage extends StatelessWidget {
             IconButton(
               onPressed: () {
                 BlocProvider.of<AuthBloc>(context).add(SignOutEvent());
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (builder) => LoginPage()),
+                  (route) => false,
                 );
               },
               icon: Icon(

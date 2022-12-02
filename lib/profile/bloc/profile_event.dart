@@ -22,3 +22,13 @@ class RegisterNewCarEvent extends ProfileEvent {
   @override
   List<Object> get props => [];
 }
+
+class ChangeCarIsActiveProfileEvent extends ProfileEvent {
+  Car car;
+
+  ChangeCarIsActiveProfileEvent({
+    required this.car,
+  });
+  @override
+  List<Object> get props => [];
+}

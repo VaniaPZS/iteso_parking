@@ -9,8 +9,6 @@ import 'package:iteso_parking/security/bloc/security_bloc.dart';
 import 'package:iteso_parking/security/security_problem_page.dart';
 import 'package:iteso_parking/utils/utils.dart';
 
-void main() => runApp(const SecurityHomePage());
-
 class SecurityHomePage extends StatelessWidget {
   const SecurityHomePage({super.key});
 
